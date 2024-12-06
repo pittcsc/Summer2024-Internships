@@ -30,9 +30,9 @@ function applyFilters() {
           const dateText = new Date(row.cells[4].textContent); // Updated index
           shouldDisplay = shouldDisplay && dateText >= fromDate && dateText <= toDate;
           break;
-        case "status":
+        case "applied": // Change this to "applied" to match the new header
           const isChecked = row.cells[5].querySelector("input").checked; // Updated index
-          shouldDisplay = shouldDisplay && ((filter.status && isChecked) || (!filter.status && !isChecked));
+          shouldDisplay = shouldDisplay && ((filter.applied && isChecked) || (!filter.applied && !isChecked));
           break;
         case "active":
           const isActive = row.cells[6].textContent.toLowerCase() === "active"; // Updated index
@@ -40,7 +40,7 @@ function applyFilters() {
           break;
       }
 
-      if (filter.column !== "date" && filter.column !== "status" && filter.column !== "active") {
+      if (filter.column !== "date" && filter.column !== "applied" && filter.column !== "active") {
         let conditionMet = false;
         filter.conditions.forEach(condition => {
           switch (condition.type) {
@@ -100,7 +100,7 @@ Promise.all([
           <div class="apply-links">
             <a href="${item.url}" class="apply-btn" target="_blank">Apply</a>
             <a href="https://simplify.jobs/p/${item.id}" target="_blank">
-              <img src="simplify-logo.png" alt="Simplify" class="simplify-logo">
+              <img src="simplify-logo.png" alt="Simplify" class="simplify-logo" data-tooltip="See on Simplify">
             </a>
           </div>
         </td>
@@ -217,11 +217,11 @@ Promise.all([
           <label for="toDate">To:</label>
           <input type="date" id="toDate">
         `;
-      } else if (column === "status" || column === "active") {
+      } else if (column === "applied" || column === "active") {
         filterOptions.innerHTML = `
           <select id="${column}Filter">
-            <option value="true">${column === "status" ? "Applied" : "Active"}</option>
-            <option value="false">${column === "status" ? "Not Applied" : "Inactive"}</option>
+            <option value="true">${column === "applied" ? "Applied" : "Active"}</option>
+            <option value="false">${column === "applied" ? "Not Applied" : "Inactive"}</option>
           </select>
         `;
       } else {
@@ -267,7 +267,7 @@ Promise.all([
       if (column === "date") {
         filter.fromDate = document.getElementById("fromDate").value;
         filter.toDate = document.getElementById("toDate").value;
-      } else if (column === "status" || column === "active") {
+      } else if (column === "applied" || column === "active") {
         filter[column] = document.getElementById(`${column}Filter`).value === "true";
       } else {
         filter.conditions = [];
@@ -297,8 +297,8 @@ Promise.all([
         let filterDescription = `${filter.column}: `;
         if (filter.column === "date") {
           filterDescription += `${filter.fromDate || "Any"} to ${filter.toDate || "Any"}`;
-        } else if (filter.column === "status" || filter.column === "active") {
-          filterDescription += filter[filter.column] ? (filter.column === "status" ? "Applied" : "Active") : (filter.column === "status" ? "Not Applied" : "Inactive");
+        } else if (filter.column === "applied" || filter.column === "active") {
+          filterDescription += filter[filter.column] ? (filter.column === "applied" ? "Applied" : "Active") : (filter.column === "applied" ? "Not Applied" : "Inactive");
         } else {
           filter.conditions.forEach((condition, i) => {
             filterDescription += `${condition.type} ${condition.value}`;
@@ -309,9 +309,9 @@ Promise.all([
         }
         filterTag.innerHTML = `
           ${filterDescription}
-          <button class="edit" data-index="${index}"><i class="fas fa-edit"></i></button>
-          <button class="duplicate" data-index="${index}"><i class="fas fa-copy"></i></button>
-          <button class="remove" data-index="${index}"><i class="fas fa-times"></i></button>
+          <button class="edit" data-index="${index}" data-tooltip="Edit"><i class="fas fa-edit"></i></button>
+          <button class="duplicate" data-index="${index}" data-tooltip="Duplicate"><i class="fas fa-copy"></i></button>
+          <button class="remove" data-index="${index}" data-tooltip="Delete"><i class="fas fa-times"></i></button>
         `;
         activeFiltersContainer.appendChild(filterTag);
       });
@@ -337,7 +337,7 @@ Promise.all([
           if (filter.column === "date") {
             document.getElementById("fromDate").value = filter.fromDate;
             document.getElementById("toDate").value = filter.toDate;
-          } else if (filter.column === "status" || filter.column === "active") {
+          } else if (filter.column === "applied" || filter.column === "active") {
             document.getElementById(`${filter.column}Filter`).value = filter[filter.column] ? "true" : "false";
           } else {
             filter.conditions.forEach((condition, i) => {
@@ -410,8 +410,8 @@ Promise.all([
         sortTag.dataset.index = index;
         sortTag.innerHTML = `
           ${sort.column}: ${sort.order}
-          <button class="edit" data-index="${index}"><i class="fas fa-edit"></i></button>
-          <button class="remove" data-index="${index}"><i class="fas fa-times"></i></button>
+          <button class="edit" data-index="${index}" data-tooltip="Edit"><i class="fas fa-edit"></i></button>
+          <button class="remove" data-index="${index}" data-tooltip="Delete"><i class="fas fa-times"></i></button>
         `;
 
         // Add drag event listeners
@@ -483,7 +483,7 @@ Promise.all([
             role: 1,
             location: 2,
             date: 4,        // Updated indices
-            status: 5,      // Updated indices
+            applied: 5,      // Updated indices
             active: 6       // Updated indices
           }[sort.column];
 
@@ -493,7 +493,7 @@ Promise.all([
           if (sort.column === "date") {
             aText = new Date(aText);
             bText = new Date(bText);
-          } else if (sort.column === "status" || sort.column === "active") {
+          } else if (sort.column === "applied" || sort.column === "active") {
             aText = aText === "active" || aText === "applied";
             bText = bText === "active" || bText === "applied";
           }
