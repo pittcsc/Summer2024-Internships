@@ -95,3 +95,7 @@ body {
 .filter-tag .edit {
   color: blue;
 }
+
+.filter-tag .duplicate {
+  color: green;
+}

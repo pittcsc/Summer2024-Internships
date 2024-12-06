@@ -3,6 +3,7 @@ fetch("../.github/scripts/listings.json")
   .then(response => response.json())
   .then(data => {
     const table = document.querySelector("#internshipTable tbody");
+    const rowCount = document.getElementById("rowCount");
 
     // Populate the table with the first 100 rows
     data.slice(0, 1000).forEach((item, index) => {
@@ -27,6 +28,9 @@ fetch("../.github/scripts/listings.json")
       `;
       table.appendChild(row);
     });
+
+    // Update row count
+    updateRowCount();
 
     // Save changes when a checkbox is clicked
     table.addEventListener("change", (event) => {
@@ -161,6 +165,7 @@ fetch("../.github/scripts/listings.json")
         filterTag.innerHTML = `
           ${filter.column}: ${filter.type || ""} ${filter.value || filter.fromDate + " to " + filter.toDate || filter.status}
           <button class="edit" data-index="${index}">Edit</button>
+          <button class="duplicate" data-index="${index}">Duplicate</button>
           <button class="remove" data-index="${index}">&times;</button>
         `;
         activeFiltersContainer.appendChild(filterTag);
@@ -197,6 +202,18 @@ fetch("../.github/scripts/listings.json")
           filterModal.style.display = "block";
         };
       });
+
+      document.querySelectorAll(".filter-tag .duplicate").forEach(button => {
+        button.onclick = () => {
+          const index = button.dataset.index;
+          const filter = activeFilters[index];
+          activeFilters.push({ ...filter });
+          updateActiveFilters();
+          applyFilters();
+        };
+      });
+
+      updateRowCount();
     }
 
     function applyFilters() {
@@ -247,6 +264,12 @@ fetch("../.github/scripts/listings.json")
 
         row.style.display = shouldDisplay ? "" : "none";
       });
+      updateRowCount();
+    }
+
+    function updateRowCount() {
+      const visibleRows = document.querySelectorAll("#internshipTable tbody tr:not([style*='display: none'])").length;
+      rowCount.textContent = `Total Rows: ${visibleRows}`;
     }
   })
   .catch(err => console.error(err));
@@ -258,4 +281,5 @@ document.querySelector("#search").addEventListener("input", (event) => {
     const text = row.textContent.toLowerCase();
     row.style.display = text.includes(query) ? "" : "none";
   });
+  updateRowCount();
 });
