@@ -68,7 +68,7 @@ function applyFilters() {
 }
 
 // Fetch internship data from the README file (or a preprocessed JSON file)
-fetch("../.github/scripts/listings.json")
+fetch("listings.json")
   .then(response => response.json())
   .then(data => {
     const table = document.querySelector("#internshipTable tbody");
