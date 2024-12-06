@@ -10,6 +10,25 @@
   <h1>Internship Tracker</h1>
   <input type="text" id="search" placeholder="Search for internships">
   <button id="filter">Filter</button>
+  <button id="addFilter">Add Filter</button>
+  <div id="activeFilters"></div>
+  <div id="filterModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <label for="filterColumn">Column:</label>
+      <select id="filterColumn">
+        <option value="company">Company</option>
+        <option value="role">Role</option>
+        <option value="location">Location</option>
+        <option value="date">Date Posted</option>
+        <option value="status">Status</option>
+      </select>
+      <div id="filterOptions">
+        <!-- Filter options will be dynamically inserted here -->
+      </div>
+      <button id="applyGlobalFilter">Apply</button>
+    </div>
+  </div>
   <table id="internshipTable">
     <thead>
       <tr>

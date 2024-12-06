@@ -5,7 +5,7 @@ fetch("../.github/scripts/listings.json")
     const table = document.querySelector("#internshipTable tbody");
 
     // Populate the table with the first 100 rows
-    data.slice(0, 10000).forEach((item, index) => {
+    data.slice(0, 1000).forEach((item, index) => {
       const row = document.createElement("tr");
       const date = new Date(item.date_updated * 1000);
       const formattedDate = date.toLocaleDateString("en-US", {
@@ -70,6 +70,153 @@ fetch("../.github/scripts/listings.json")
         });
       });
     });
+
+    // Global filter functionality
+    const filterModal = document.getElementById("filterModal");
+    const addFilterBtn = document.getElementById("addFilter");
+    const closeBtn = document.querySelector(".close");
+    const filterColumn = document.getElementById("filterColumn");
+    const filterOptions = document.getElementById("filterOptions");
+    const applyGlobalFilterBtn = document.getElementById("applyGlobalFilter");
+    const activeFiltersContainer = document.getElementById("activeFilters");
+    let activeFilters = [];
+
+    addFilterBtn.onclick = () => {
+      filterModal.style.display = "block";
+    };
+
+    closeBtn.onclick = () => {
+      filterModal.style.display = "none";
+    };
+
+    window.onclick = (event) => {
+      if (event.target == filterModal) {
+        filterModal.style.display = "none";
+      }
+    };
+
+    filterColumn.onchange = () => {
+      const column = filterColumn.value;
+      filterOptions.innerHTML = "";
+
+      if (column === "date") {
+        filterOptions.innerHTML = `
+          <label for="fromDate">From:</label>
+          <input type="date" id="fromDate">
+          <label for="toDate">To:</label>
+          <input type="date" id="toDate">
+        `;
+      } else if (column === "status") {
+        filterOptions.innerHTML = `
+          <select id="statusFilter">
+            <option value="applied">Applied</option>
+            <option value="not-applied">Not Applied</option>
+          </select>
+        `;
+      } else {
+        filterOptions.innerHTML = `
+          <select id="filterType">
+            <option value="contains">Contains</option>
+            <option value="equals">Equals</option>
+            <option value="not-equals">Not Equals</option>
+            <option value="not-contains">Not Contains</option>
+          </select>
+          <input type="text" id="filterValue">
+        `;
+      }
+    };
+
+    applyGlobalFilterBtn.onclick = () => {
+      const column = filterColumn.value;
+      let filter = { column };
+
+      if (column === "date") {
+        filter.fromDate = document.getElementById("fromDate").value;
+        filter.toDate = document.getElementById("toDate").value;
+      } else if (column === "status") {
+        filter.status = document.getElementById("statusFilter").value;
+      } else {
+        filter.type = document.getElementById("filterType").value;
+        filter.value = document.getElementById("filterValue").value.toLowerCase();
+      }
+
+      activeFilters.push(filter);
+      updateActiveFilters();
+      applyFilters();
+      filterModal.style.display = "none";
+    };
+
+    function updateActiveFilters() {
+      activeFiltersContainer.innerHTML = "";
+      activeFilters.forEach((filter, index) => {
+        const filterTag = document.createElement("div");
+        filterTag.className = "filter-tag";
+        filterTag.innerHTML = `
+          ${filter.column}: ${filter.type || ""} ${filter.value || filter.fromDate + " to " + filter.toDate || filter.status}
+          <button data-index="${index}">&times;</button>
+        `;
+        activeFiltersContainer.appendChild(filterTag);
+      });
+
+      document.querySelectorAll(".filter-tag button").forEach(button => {
+        button.onclick = () => {
+          const index = button.dataset.index;
+          activeFilters.splice(index, 1);
+          updateActiveFilters();
+          applyFilters();
+        };
+      });
+    }
+
+    function applyFilters() {
+      document.querySelectorAll("#internshipTable tbody tr").forEach(row => {
+        let shouldDisplay = true;
+
+        activeFilters.forEach(filter => {
+          let cellText;
+          switch (filter.column) {
+            case "company":
+              cellText = row.cells[0].textContent.toLowerCase();
+              break;
+            case "role":
+              cellText = row.cells[1].textContent.toLowerCase();
+              break;
+            case "location":
+              cellText = row.cells[2].textContent.toLowerCase();
+              break;
+            case "date":
+              const fromDate = new Date(filter.fromDate);
+              const toDate = new Date(filter.toDate);
+              const dateText = new Date(row.cells[5].textContent);
+              shouldDisplay = shouldDisplay && dateText >= fromDate && dateText <= toDate;
+              break;
+            case "status":
+              const isChecked = row.cells[6].querySelector("input").checked;
+              shouldDisplay = shouldDisplay && ((filter.status === "applied" && isChecked) || (filter.status === "not-applied" && !isChecked));
+              break;
+          }
+
+          if (filter.column !== "date" && filter.column !== "status") {
+            switch (filter.type) {
+              case "contains":
+                shouldDisplay = shouldDisplay && cellText.includes(filter.value);
+                break;
+              case "equals":
+                shouldDisplay = shouldDisplay && cellText === filter.value;
+                break;
+              case "not-equals":
+                shouldDisplay = shouldDisplay && cellText !== filter.value;
+                break;
+              case "not-contains":
+                shouldDisplay = shouldDisplay && !cellText.includes(filter.value);
+                break;
+            }
+          }
+        });
+
+        row.style.display = shouldDisplay ? "" : "none";
+      });
+    }
   })
   .catch(err => console.error(err));
 
