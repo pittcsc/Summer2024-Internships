@@ -352,3 +352,72 @@ h2 {
   align-items: center;
   gap: 8px;
 }
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .search-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .filter-grid,
+  .sort-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-left,
+  .sort-left {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .filter-right,
+  .sort-right {
+    padding: 8px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  th, td {
+    padding: 6px;
+  }
+
+  .apply-btn {
+    padding: 4px 8px;
+  }
+
+  .simplify-logo {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 0.875rem;
+  }
+
+  .apply-btn {
+    padding: 3px 6px;
+  }
+
+  .simplify-logo {
+    height: 18px;
+    width: 18px;
+  }
+
+  th, td {
+    padding: 4px;
+  }
+
+  .filter-tag,
+  .sort-tag {
+    padding: 3px 6px;
+  }
+}
