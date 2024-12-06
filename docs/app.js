@@ -191,7 +191,7 @@ fetch("../.github/scripts/listings.json")
         filterTag.className = "filter-tag";
         let filterDescription = `${filter.column}: `;
         if (filter.column === "date") {
-          filterDescription += `${filter.fromDate} to ${filter.toDate}`;
+          filterDescription += `${filter.fromDate || "Any"} to ${filter.toDate || "Any"}`;
         } else if (filter.column === "status") {
           filterDescription += filter.status;
         } else {
@@ -279,8 +279,8 @@ fetch("../.github/scripts/listings.json")
               cellText = row.cells[2].textContent.toLowerCase();
               break;
             case "date":
-              const fromDate = new Date(filter.fromDate);
-              const toDate = new Date(filter.toDate);
+              const fromDate = filter.fromDate ? new Date(filter.fromDate) : new Date(-8640000000000000);
+              const toDate = filter.toDate ? new Date(filter.toDate) : new Date(8640000000000000);
               const dateText = new Date(row.cells[5].textContent);
               shouldDisplay = shouldDisplay && dateText >= fromDate && dateText <= toDate;
               break;
