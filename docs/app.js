@@ -1,5 +1,5 @@
 // Fetch internship data from the README file (or a preprocessed JSON file)
-fetch("path_to_your_data.json")
+fetch("../.github/scripts/listings.json")
   .then(response => response.json())
   .then(data => {
     const table = document.querySelector("#internshipTable tbody");
