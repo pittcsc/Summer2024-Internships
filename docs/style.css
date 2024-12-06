@@ -13,3 +13,25 @@ body {
   th {
     background-color: #f4f4f4;
   }
+
+.filter-container {
+  display: inline-block;
+  position: relative;
+}
+
+.filter-dropdown {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+.filter-dropdown input,
+.filter-dropdown select {
+  margin: 5px;
+}
+
+.filter-container:hover .filter-dropdown {
+  display: block;
+}

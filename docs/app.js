@@ -5,7 +5,7 @@ fetch("../.github/scripts/listings.json")
     const table = document.querySelector("#internshipTable tbody");
 
     // Populate the table with the first 100 rows
-    data.slice(0, 100).forEach((item, index) => {
+    data.slice(0, 10000).forEach((item, index) => {
       const row = document.createElement("tr");
       const date = new Date(item.date_updated * 1000);
       const formattedDate = date.toLocaleDateString("en-US", {
@@ -38,6 +38,37 @@ fetch("../.github/scripts/listings.json")
         // Save to localStorage
         localStorage.setItem("internshipData", JSON.stringify(data));
       }
+    });
+
+    // Add event listeners for filter buttons
+    document.querySelectorAll(".apply-filter").forEach((button, index) => {
+      button.addEventListener("click", () => {
+        const filterType = button.previousElementSibling.previousElementSibling.value;
+        const filterValue = button.previousElementSibling.value.toLowerCase();
+        const columnIndex = index;
+
+        document.querySelectorAll("#internshipTable tbody tr").forEach(row => {
+          const cellText = row.cells[columnIndex].textContent.toLowerCase();
+          let shouldDisplay = true;
+
+          switch (filterType) {
+            case "contains":
+              shouldDisplay = cellText.includes(filterValue);
+              break;
+            case "equals":
+              shouldDisplay = cellText === filterValue;
+              break;
+            case "not-equals":
+              shouldDisplay = cellText !== filterValue;
+              break;
+            case "not-contains":
+              shouldDisplay = !cellText.includes(filterValue);
+              break;
+          }
+
+          row.style.display = shouldDisplay ? "" : "none";
+        });
+      });
     });
   })
   .catch(err => console.error(err));
