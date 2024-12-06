@@ -286,9 +286,9 @@ fetch("../.github/scripts/listings.json")
         }
         filterTag.innerHTML = `
           ${filterDescription}
-          <button class="edit" data-index="${index}">Edit</button>
-          <button class="duplicate" data-index="${index}">Duplicate</button>
-          <button class="remove" data-index="${index}">&times;</button>
+          <button class="edit" data-index="${index}"><i class="fas fa-edit"></i></button>
+          <button class="duplicate" data-index="${index}"><i class="fas fa-copy"></i></button>
+          <button class="remove" data-index="${index}"><i class="fas fa-times"></i></button>
         `;
         activeFiltersContainer.appendChild(filterTag);
       });
@@ -393,8 +393,8 @@ fetch("../.github/scripts/listings.json")
         sortTag.dataset.index = index;
         sortTag.innerHTML = `
           ${sort.column}: ${sort.order}
-          <button class="edit" data-index="${index}">Edit</button>
-          <button class="remove" data-index="${index}">&times;</button>
+          <button class="edit" data-index="${index}"><i class="fas fa-edit"></i></button>
+          <button class="remove" data-index="${index}"><i class="fas fa-times"></i></button>
         `;
 
         // Add drag event listeners

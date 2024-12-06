@@ -167,6 +167,31 @@ button:hover {
   cursor: grabbing;
 }
 
+.filter-tag button,
+.sort-tag button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+  padding: 2px 6px;
+  font-size: 14px;
+}
+
+.filter-tag .edit,
+.sort-tag .edit {
+  color: #66b3ff;
+}
+
+.filter-tag .duplicate,
+.sort-tag .duplicate {
+  color: #4CAF50;
+}
+
+.filter-tag .remove,
+.sort-tag .remove {
+  color: #ff6666;
+}
+
 #activeSorts {
   min-height: 40px;
   padding: 5px;
