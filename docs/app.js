@@ -25,6 +25,7 @@ fetch("../.github/scripts/listings.json")
         <td>
           <input type="checkbox" data-id="${index}" ${item.applied ? "checked" : ""}>
         </td>
+        <td>${item.active ? "Active" : "Inactive"}</td>
       `;
       table.appendChild(row);
     });
@@ -112,11 +113,11 @@ fetch("../.github/scripts/listings.json")
           <label for="toDate">To:</label>
           <input type="date" id="toDate">
         `;
-      } else if (column === "status") {
+      } else if (column === "status" || column === "active") {
         filterOptions.innerHTML = `
-          <select id="statusFilter">
-            <option value="applied">Applied</option>
-            <option value="not-applied">Not Applied</option>
+          <select id="${column}Filter">
+            <option value="true">${column === "status" ? "Applied" : "Active"}</option>
+            <option value="false">${column === "status" ? "Not Applied" : "Inactive"}</option>
           </select>
         `;
       } else {
@@ -162,8 +163,8 @@ fetch("../.github/scripts/listings.json")
       if (column === "date") {
         filter.fromDate = document.getElementById("fromDate").value;
         filter.toDate = document.getElementById("toDate").value;
-      } else if (column === "status") {
-        filter.status = document.getElementById("statusFilter").value;
+      } else if (column === "status" || column === "active") {
+        filter[column] = document.getElementById(`${column}Filter`).value === "true";
       } else {
         filter.conditions = [];
         document.querySelectorAll(".filter-input").forEach(input => {
@@ -192,8 +193,8 @@ fetch("../.github/scripts/listings.json")
         let filterDescription = `${filter.column}: `;
         if (filter.column === "date") {
           filterDescription += `${filter.fromDate || "Any"} to ${filter.toDate || "Any"}`;
-        } else if (filter.column === "status") {
-          filterDescription += filter.status;
+        } else if (filter.column === "status" || filter.column === "active") {
+          filterDescription += filter[filter.column] ? (filter.column === "status" ? "Applied" : "Active") : (filter.column === "status" ? "Not Applied" : "Inactive");
         } else {
           filter.conditions.forEach((condition, i) => {
             filterDescription += `${condition.type} ${condition.value}`;
@@ -232,8 +233,8 @@ fetch("../.github/scripts/listings.json")
           if (filter.column === "date") {
             document.getElementById("fromDate").value = filter.fromDate;
             document.getElementById("toDate").value = filter.toDate;
-          } else if (filter.column === "status") {
-            document.getElementById("statusFilter").value = filter.status;
+          } else if (filter.column === "status" || filter.column === "active") {
+            document.getElementById(`${filter.column}Filter`).value = filter[filter.column] ? "true" : "false";
           } else {
             filter.conditions.forEach((condition, i) => {
               if (i > 0) {
@@ -286,11 +287,15 @@ fetch("../.github/scripts/listings.json")
               break;
             case "status":
               const isChecked = row.cells[6].querySelector("input").checked;
-              shouldDisplay = shouldDisplay && ((filter.status === "applied" && isChecked) || (filter.status === "not-applied" && !isChecked));
+              shouldDisplay = shouldDisplay && ((filter.status && isChecked) || (!filter.status && !isChecked));
+              break;
+            case "active":
+              const isActive = row.cells[7].textContent.toLowerCase() === "active";
+              shouldDisplay = shouldDisplay && ((filter.active && isActive) || (!filter.active && !isActive));
               break;
           }
 
-          if (filter.column !== "date" && filter.column !== "status") {
+          if (filter.column !== "date" && filter.column !== "status" && filter.column !== "active") {
             let conditionMet = false;
             filter.conditions.forEach(condition => {
               switch (condition.type) {
