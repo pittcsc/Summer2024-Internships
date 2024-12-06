@@ -12,6 +12,8 @@
   <button id="filter">Search</button>
   <button id="addFilter">Add Filter</button>
   <div id="activeFilters"></div>
+  <button id="addSort">Add Sort</button>
+  <div id="activeSorts"></div>
   <div id="rowCount">Total Rows: 0</div>
   <div id="filterModal" class="modal">
     <div class="modal-content">
@@ -31,17 +33,37 @@
       <button id="applyGlobalFilter">Apply</button>
     </div>
   </div>
+  <div id="sortModal" class="modal">
+    <div class="modal-content">
+      <span class="closeSort">&times;</span>
+      <label for="sortColumn">Column:</label>
+      <select id="sortColumn">
+        <option value="company">Company</option>
+        <option value="role">Role</option>
+        <option value="location">Location</option>
+        <option value="date">Date Posted</option>
+        <option value="status">Status</option>
+        <option value="active">Active</option>
+      </select>
+      <label for="sortOrder">Order:</label>
+      <select id="sortOrder">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+      <button id="applySort">Apply</button>
+    </div>
+  </div>
   <table id="internshipTable">
     <thead>
       <tr>
-        <th>Company</th>
-        <th>Role</th>
-        <th>Location</th>
+        <th>Company <button class="sort" data-column="company" data-order="asc">↑</button><button class="sort" data-column="company" data-order="desc">↓</button></th>
+        <th>Role <button class="sort" data-column="role" data-order="asc">↑</button><button class="sort" data-column="role" data-order="desc">↓</button></th>
+        <th>Location <button class="sort" data-column="location" data-order="asc">↑</button><button class="sort" data-column="location" data-order="desc">↓</button></th>
         <th>Link</th>
         <th>Simplify Link</th>
-        <th>Date Posted</th>
-        <th>Status</th>
-        <th>Active</th>
+        <th>Date Posted <button class="sort" data-column="date" data-order="asc">↑</button><button class="sort" data-column="date" data-order="desc">↓</button></th>
+        <th>Status <button class="sort" data-column="status" data-order="asc">↑</button><button class="sort" data-column="status" data-order="desc">↓</button></th>
+        <th>Active <button class="sort" data-column="active" data-order="asc">↑</button><button class="sort" data-column="active" data-order="desc">↓</button></th>
       </tr>
     </thead>
     <tbody></tbody>

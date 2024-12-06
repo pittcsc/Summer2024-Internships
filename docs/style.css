@@ -112,3 +112,40 @@ body {
   cursor: pointer;
   margin-left: 5px;
 }
+
+.sort-tag {
+  display: inline-block;
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: grab;
+}
+
+.sort-tag button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.sort-tag .edit {
+  color: blue;
+}
+
+.sort-tag .remove {
+  color: red;
+}
+
+.sort-tag.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+#activeSorts {
+  min-height: 40px;
+  padding: 5px;
+  border: 1px dashed #ccc;
+}

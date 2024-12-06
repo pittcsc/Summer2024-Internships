@@ -1,5 +1,71 @@
 let activeFilters = []; // Move this to the top
 const activeFiltersContainer = document.getElementById("activeFilters"); // Move this to the top
+let activeSorts = []; // Add this to the top
+const activeSortsContainer = document.getElementById("activeSorts"); // Add this to the top
+
+function updateRowCount() {
+  const visibleRows = document.querySelectorAll("#internshipTable tbody tr:not([style*='display: none'])").length;
+  rowCount.textContent = `Total Rows: ${visibleRows}`;
+}
+
+function applyFilters() {
+  document.querySelectorAll("#internshipTable tbody tr").forEach(row => {
+    let shouldDisplay = true;
+
+    activeFilters.forEach(filter => {
+      let cellText;
+      switch (filter.column) {
+        case "company":
+          cellText = row.cells[0].textContent.toLowerCase();
+          break;
+        case "role":
+          cellText = row.cells[1].textContent.toLowerCase();
+          break;
+        case "location":
+          cellText = row.cells[2].textContent.toLowerCase();
+          break;
+        case "date":
+          const fromDate = filter.fromDate ? new Date(filter.fromDate) : new Date(-8640000000000000);
+          const toDate = filter.toDate ? new Date(filter.toDate) : new Date(8640000000000000);
+          const dateText = new Date(row.cells[5].textContent);
+          shouldDisplay = shouldDisplay && dateText >= fromDate && dateText <= toDate;
+          break;
+        case "status":
+          const isChecked = row.cells[6].querySelector("input").checked;
+          shouldDisplay = shouldDisplay && ((filter.status && isChecked) || (!filter.status && !isChecked));
+          break;
+        case "active":
+          const isActive = row.cells[7].textContent.toLowerCase() === "active";
+          shouldDisplay = shouldDisplay && ((filter.active && isActive) || (!filter.active && !isActive));
+          break;
+      }
+
+      if (filter.column !== "date" && filter.column !== "status" && filter.column !== "active") {
+        let conditionMet = false;
+        filter.conditions.forEach(condition => {
+          switch (condition.type) {
+            case "contains":
+              conditionMet = conditionMet || cellText.includes(condition.value);
+              break;
+            case "equals":
+              conditionMet = conditionMet || cellText === condition.value;
+              break;
+            case "not-equals":
+              conditionMet = conditionMet || cellText !== condition.value;
+              break;
+            case "not-contains":
+              conditionMet = conditionMet || !cellText.includes(condition.value);
+              break;
+          }
+        });
+        shouldDisplay = shouldDisplay && conditionMet;
+      }
+    });
+
+    row.style.display = shouldDisplay ? "" : "none";
+  });
+  updateRowCount();
+}
 
 // Fetch internship data from the README file (or a preprocessed JSON file)
 fetch("../.github/scripts/listings.json")
@@ -85,6 +151,15 @@ fetch("../.github/scripts/listings.json")
 
           row.style.display = shouldDisplay ? "" : "none";
         });
+      });
+    });
+
+    // Add event listeners for sort buttons
+    document.querySelectorAll(".sort").forEach(button => {
+      button.addEventListener("click", () => {
+        const column = button.dataset.column;
+        const order = button.dataset.order;
+        sortTable(column, order);
       });
     });
 
@@ -273,68 +348,151 @@ fetch("../.github/scripts/listings.json")
       updateRowCount();
     }
 
-    function applyFilters() {
-      document.querySelectorAll("#internshipTable tbody tr").forEach(row => {
-        let shouldDisplay = true;
+    // Sort functionality
+    const sortModal = document.getElementById("sortModal");
+    const addSortBtn = document.getElementById("addSort");
+    const closeSortBtn = document.querySelector(".closeSort");
+    const sortColumn = document.getElementById("sortColumn");
+    const sortOrder = document.getElementById("sortOrder");
+    const applySortBtn = document.getElementById("applySort");
+    let editSortIndex = null;
 
-        activeFilters.forEach(filter => {
-          let cellText;
-          switch (filter.column) {
-            case "company":
-              cellText = row.cells[0].textContent.toLowerCase();
-              break;
-            case "role":
-              cellText = row.cells[1].textContent.toLowerCase();
-              break;
-            case "location":
-              cellText = row.cells[2].textContent.toLowerCase();
-              break;
-            case "date":
-              const fromDate = filter.fromDate ? new Date(filter.fromDate) : new Date(-8640000000000000);
-              const toDate = filter.toDate ? new Date(filter.toDate) : new Date(8640000000000000);
-              const dateText = new Date(row.cells[5].textContent);
-              shouldDisplay = shouldDisplay && dateText >= fromDate && dateText <= toDate;
-              break;
-            case "status":
-              const isChecked = row.cells[6].querySelector("input").checked;
-              shouldDisplay = shouldDisplay && ((filter.status && isChecked) || (!filter.status && !isChecked));
-              break;
-            case "active":
-              const isActive = row.cells[7].textContent.toLowerCase() === "active";
-              shouldDisplay = shouldDisplay && ((filter.active && isActive) || (!filter.active && !isActive));
-              break;
-          }
+    addSortBtn.onclick = () => {
+      sortModal.style.display = "block";
+      editSortIndex = null;
+    };
 
-          if (filter.column !== "date" && filter.column !== "status" && filter.column !== "active") {
-            let conditionMet = false;
-            filter.conditions.forEach(condition => {
-              switch (condition.type) {
-                case "contains":
-                  conditionMet = conditionMet || cellText.includes(condition.value);
-                  break;
-                case "equals":
-                  conditionMet = conditionMet || cellText === condition.value;
-                  break;
-                case "not-equals":
-                  conditionMet = conditionMet || cellText !== condition.value;
-                  break;
-                case "not-contains":
-                  conditionMet = conditionMet || !cellText.includes(condition.value);
-                  break;
-              }
-            });
-            shouldDisplay = shouldDisplay && conditionMet;
-          }
-        });
+    closeSortBtn.onclick = () => {
+      sortModal.style.display = "none";
+    };
 
-        row.style.display = shouldDisplay ? "" : "none";
+    window.onclick = (event) => {
+      if (event.target == sortModal) {
+        sortModal.style.display = "none";
+      }
+    };
+
+    applySortBtn.onclick = () => {
+      const column = sortColumn.value;
+      const order = sortOrder.value;
+      let sort = { column, order };
+
+      if (editSortIndex !== null) {
+        activeSorts[editSortIndex] = sort;
+      } else {
+        activeSorts.push(sort);
+      }
+
+      updateActiveSorts();
+      sortTable();
+      sortModal.style.display = "none";
+    };
+
+    function updateActiveSorts() {
+      activeSortsContainer.innerHTML = "";
+      activeSorts.forEach((sort, index) => {
+        const sortTag = document.createElement("div");
+        sortTag.className = "sort-tag";
+        sortTag.draggable = true;
+        sortTag.dataset.index = index;
+        sortTag.innerHTML = `
+          ${sort.column}: ${sort.order}
+          <button class="edit" data-index="${index}">Edit</button>
+          <button class="remove" data-index="${index}">&times;</button>
+        `;
+
+        // Add drag event listeners
+        sortTag.addEventListener('dragstart', handleDragStart);
+        sortTag.addEventListener('dragend', handleDragEnd);
+        sortTag.addEventListener('dragover', handleDragOver);
+        sortTag.addEventListener('drop', handleDrop);
+
+        activeSortsContainer.appendChild(sortTag);
       });
-      updateRowCount();
+
+      document.querySelectorAll(".sort-tag .remove").forEach(button => {
+        button.onclick = () => {
+          const index = button.dataset.index;
+          activeSorts.splice(index, 1);
+          updateActiveSorts();
+          sortTable();
+        };
+      });
+
+      document.querySelectorAll(".sort-tag .edit").forEach(button => {
+        button.onclick = () => {
+          const index = button.dataset.index;
+          const sort = activeSorts[index];
+          editSortIndex = index;
+
+          sortColumn.value = sort.column;
+          sortOrder.value = sort.order;
+
+          sortModal.style.display = "block";
+        };
+      });
     }
 
-    function updateRowCount() {
-      const visibleRows = document.querySelectorAll("#internshipTable tbody tr:not([style*='display: none'])").length;
-      rowCount.textContent = `Total Rows: ${visibleRows}`;
+    function handleDragStart(e) {
+      e.target.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', e.target.dataset.index);
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+      const toIndex = parseInt(e.target.closest('.sort-tag').dataset.index);
+      
+      if (fromIndex !== toIndex) {
+        const [movedSort] = activeSorts.splice(fromIndex, 1);
+        activeSorts.splice(toIndex, 0, movedSort);
+        updateActiveSorts();
+        sortTable();
+      }
+    }
+
+    function sortTable() {
+      const rows = Array.from(table.querySelectorAll("tr"));
+      
+      rows.sort((a, b) => {
+        // Try each sort rule in order until we find a difference
+        for (const sort of activeSorts) {
+          const columnIndex = {
+            company: 0,
+            role: 1,
+            location: 2,
+            date: 5,
+            status: 6,
+            active: 7
+          }[sort.column];
+
+          let aText = a.cells[columnIndex].textContent.toLowerCase();
+          let bText = b.cells[columnIndex].textContent.toLowerCase();
+
+          if (sort.column === "date") {
+            aText = new Date(aText);
+            bText = new Date(bText);
+          } else if (sort.column === "status" || sort.column === "active") {
+            aText = aText === "active" || aText === "applied";
+            bText = bText === "active" || bText === "applied";
+          }
+
+          if (aText < bText) return sort.order === "asc" ? -1 : 1;
+          if (aText > bText) return sort.order === "asc" ? 1 : -1;
+          // If equal, continue to next sort rule
+        }
+        return 0; // All sort rules resulted in equality
+      });
+
+      rows.forEach(row => table.appendChild(row));
     }
   })
   .catch(err => console.error(err));
