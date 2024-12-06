@@ -71,10 +71,11 @@ button:hover {
 
 .modal-content {
   background-color: #252525;
-  margin: 15% auto;
+  margin: 10% auto;
   padding: 20px;
   border: 1px solid #404040;
   width: 80%;
+  max-width: 600px;
 }
 
 .close {
@@ -197,4 +198,76 @@ button:hover {
   padding: 5px;
   border: 1px dashed #404040;
   background-color: #252525;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+section {
+  margin-bottom: 15px;
+  background: #252525;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+  font-size: 1rem;
+  margin: 0 0 12px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #404040;
+  color: #66b3ff;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-grid,
+.sort-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+}
+
+.filter-left,
+.sort-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-right,
+.sort-right {
+  background: #1a1a1a;
+  padding: 10px;
+  border-radius: 4px;
+  min-height: 60px;
+}
+
+#addFilter,
+#addSort {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 12px;
+}
+
+.filter-tag,
+.sort-tag {
+  margin-bottom: 6px;
+  width: fit-content;
+  padding: 4px 8px;
+}
+
+/* Remove any margin-top from the table */
+.table-section table {
+  margin-top: 0;
 }

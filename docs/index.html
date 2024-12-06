@@ -8,14 +8,52 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Internship Tracker</h1>
-  <input type="text" id="search" placeholder="Search for internships">
-  <button id="filter">Search</button>
-  <button id="addFilter">Add Filter</button>
-  <div id="activeFilters"></div>
-  <button id="addSort">Add Sort</button>
-  <div id="activeSorts"></div>
-  <div id="rowCount">Total Rows: 0</div>
+  <div class="container">
+    <section class="search-section">
+      <h2>Search</h2>
+      <input type="text" id="search" placeholder="Search for internships">
+      <div id="rowCount">Total Rows: 0</div>
+    </section>
+
+    <section class="filter-section">
+      <h2>Filters</h2>
+      <div class="filter-grid">
+        <div class="filter-left">
+          <button id="addFilter"><i class="fas fa-plus"></i> Add Filter</button>
+        </div>
+        <div class="filter-right" id="activeFilters"></div>
+      </div>
+    </section>
+
+    <section class="sort-section">
+      <h2>Sort</h2>
+      <div class="sort-grid">
+        <div class="sort-left">
+          <button id="addSort"><i class="fas fa-plus"></i> Add Sort</button>
+        </div>
+        <div class="sort-right" id="activeSorts"></div>
+      </div>
+    </section>
+
+    <section class="table-section">
+      <table id="internshipTable">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Location</th>
+            <th>Link</th>
+            <th>Simplify Link</th>
+            <th>Date Posted</th>
+            <th>Status</th>
+            <th>Active</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+
   <div id="filterModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -54,21 +92,6 @@
       <button id="applySort">Apply</button>
     </div>
   </div>
-  <table id="internshipTable">
-    <thead>
-      <tr>
-        <th>Company</th>
-        <th>Role</th>
-        <th>Location</th>
-        <th>Link</th>
-        <th>Simplify Link</th>
-        <th>Date Posted</th>
-        <th>Status</th>
-        <th>Active</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
   <script src="app.js"></script>
 </body>
 </html>
