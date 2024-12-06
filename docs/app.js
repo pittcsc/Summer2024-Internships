@@ -4,8 +4,8 @@ fetch("../.github/scripts/listings.json")
   .then(data => {
     const table = document.querySelector("#internshipTable tbody");
 
-    // Populate the table
-    data.forEach((item, index) => {
+    // Populate the table with the first 100 rows
+    data.slice(0, 100).forEach((item, index) => {
       const row = document.createElement("tr");
       const date = new Date(item.date_updated * 1000);
       const formattedDate = date.toLocaleDateString("en-US", {
