@@ -68,7 +68,7 @@ function applyFilters() {
 }
 
 // Fetch internship data from the README file (or a preprocessed JSON file)
-fetch("listings.json")
+fetch("https://raw.githubusercontent.com/abhira0/Summer2025-Internships/dev/.github/scripts/listings.json")
   .then(response => response.json())
   .then(data => {
     const table = document.querySelector("#internshipTable tbody");
