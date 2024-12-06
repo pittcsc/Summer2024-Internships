@@ -159,6 +159,14 @@ fetch("../.github/scripts/listings.json")
       });
     });
 
+    // Add event listener for Escape key
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        filterModal.style.display = 'none';
+        sortModal.style.display = 'none';
+      }
+    });
+
     // Global filter functionality
     const filterModal = document.getElementById("filterModal");
     const addFilterBtn = document.getElementById("addFilter");
