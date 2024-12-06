@@ -99,3 +99,16 @@ body {
 .filter-tag .duplicate {
   color: green;
 }
+
+.filter-input {
+  display: flex;
+  align-items: center;
+}
+
+.filter-input button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 5px;
+}

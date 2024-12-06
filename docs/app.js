@@ -120,17 +120,34 @@ fetch("../.github/scripts/listings.json")
           </select>
         `;
       } else {
-        filterOptions.innerHTML = `
-          <select id="filterType">
-            <option value="contains">Contains</option>
-            <option value="equals">Equals</option>
-            <option value="not-equals">Not Equals</option>
-            <option value="not-contains">Not Contains</option>
-          </select>
-          <input type="text" id="filterValue">
-        `;
+        addFilterInput();
       }
     };
+
+    function addFilterInput() {
+      const filterInput = document.createElement("div");
+      filterInput.className = "filter-input";
+      filterInput.innerHTML = `
+        <select class="filterType">
+          <option value="contains">Contains</option>
+          <option value="equals">Equals</option>
+          <option value="not-equals">Not Equals</option>
+          <option value="not-contains">Not Contains</option>
+        </select>
+        <input type="text" class="filterValue">
+        <button class="add-input">+</button>
+        <button class="remove-input">-</button>
+      `;
+      filterOptions.appendChild(filterInput);
+
+      filterInput.querySelector(".add-input").onclick = () => {
+        addFilterInput();
+      };
+
+      filterInput.querySelector(".remove-input").onclick = () => {
+        filterInput.remove();
+      };
+    }
 
     applyGlobalFilterBtn.onclick = () => {
       const column = filterColumn.value;
@@ -142,8 +159,12 @@ fetch("../.github/scripts/listings.json")
       } else if (column === "status") {
         filter.status = document.getElementById("statusFilter").value;
       } else {
-        filter.type = document.getElementById("filterType").value;
-        filter.value = document.getElementById("filterValue").value.toLowerCase();
+        filter.conditions = [];
+        document.querySelectorAll(".filter-input").forEach(input => {
+          const type = input.querySelector(".filterType").value;
+          const value = input.querySelector(".filterValue").value.toLowerCase();
+          filter.conditions.push({ type, value });
+        });
       }
 
       if (editIndex !== null) {
@@ -162,8 +183,21 @@ fetch("../.github/scripts/listings.json")
       activeFilters.forEach((filter, index) => {
         const filterTag = document.createElement("div");
         filterTag.className = "filter-tag";
+        let filterDescription = `${filter.column}: `;
+        if (filter.column === "date") {
+          filterDescription += `${filter.fromDate} to ${filter.toDate}`;
+        } else if (filter.column === "status") {
+          filterDescription += filter.status;
+        } else {
+          filter.conditions.forEach((condition, i) => {
+            filterDescription += `${condition.type} ${condition.value}`;
+            if (i < filter.conditions.length - 1) {
+              filterDescription += " OR ";
+            }
+          });
+        }
         filterTag.innerHTML = `
-          ${filter.column}: ${filter.type || ""} ${filter.value || filter.fromDate + " to " + filter.toDate || filter.status}
+          ${filterDescription}
           <button class="edit" data-index="${index}">Edit</button>
           <button class="duplicate" data-index="${index}">Duplicate</button>
           <button class="remove" data-index="${index}">&times;</button>
@@ -195,8 +229,14 @@ fetch("../.github/scripts/listings.json")
           } else if (filter.column === "status") {
             document.getElementById("statusFilter").value = filter.status;
           } else {
-            document.getElementById("filterType").value = filter.type;
-            document.getElementById("filterValue").value = filter.value;
+            filter.conditions.forEach((condition, i) => {
+              if (i > 0) {
+                addFilterInput();
+              }
+              const filterInputs = document.querySelectorAll(".filter-input");
+              filterInputs[i].querySelector(".filterType").value = condition.type;
+              filterInputs[i].querySelector(".filterValue").value = condition.value;
+            });
           }
 
           filterModal.style.display = "block";
@@ -245,20 +285,24 @@ fetch("../.github/scripts/listings.json")
           }
 
           if (filter.column !== "date" && filter.column !== "status") {
-            switch (filter.type) {
-              case "contains":
-                shouldDisplay = shouldDisplay && cellText.includes(filter.value);
-                break;
-              case "equals":
-                shouldDisplay = shouldDisplay && cellText === filter.value;
-                break;
-              case "not-equals":
-                shouldDisplay = shouldDisplay && cellText !== filter.value;
-                break;
-              case "not-contains":
-                shouldDisplay = shouldDisplay && !cellText.includes(filter.value);
-                break;
-            }
+            let conditionMet = false;
+            filter.conditions.forEach(condition => {
+              switch (condition.type) {
+                case "contains":
+                  conditionMet = conditionMet || cellText.includes(condition.value);
+                  break;
+                case "equals":
+                  conditionMet = conditionMet || cellText === condition.value;
+                  break;
+                case "not-equals":
+                  conditionMet = conditionMet || cellText !== condition.value;
+                  break;
+                case "not-contains":
+                  conditionMet = conditionMet || !cellText.includes(condition.value);
+                  break;
+              }
+            });
+            shouldDisplay = shouldDisplay && conditionMet;
           }
         });
 
