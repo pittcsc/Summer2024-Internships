@@ -1,39 +1,60 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  th {
-    background-color: #f4f4f4;
-  }
-
-.filter-container {
-  display: inline-block;
-  position: relative;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
 }
 
-.filter-dropdown {
-  display: none;
-  position: absolute;
-  background-color: white;
-  border: 1px solid #ddd;
-  z-index: 1;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #252525;
 }
 
-.filter-dropdown input,
-.filter-dropdown select {
-  margin: 5px;
+th, td {
+  border: 1px solid #404040;
+  padding: 8px;
 }
 
-.filter-container:hover .filter-dropdown {
-  display: block;
+th {
+  background-color: #333;
+  color: #fff;
+}
+
+td {
+  color: #e0e0e0;
+}
+
+a {
+  color: #66b3ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+input[type="text"], 
+input[type="date"],
+select {
+  background-color: #333;
+  border: 1px solid #404040;
+  color: #e0e0e0;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #404040;
+  color: #e0e0e0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #505050;
 }
 
 .modal {
@@ -45,20 +66,19 @@ body {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .modal-content {
-  background-color: #fefefe;
+  background-color: #252525;
   margin: 15% auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 1px solid #404040;
   width: 80%;
 }
 
 .close {
-  color: #aaa;
+  color: #808080;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -66,7 +86,7 @@ body {
 
 .close:hover,
 .close:focus {
-  color: black;
+  color: #e0e0e0;
   text-decoration: none;
   cursor: pointer;
 }
@@ -77,8 +97,8 @@ body {
 
 .filter-tag {
   display: inline-block;
-  background-color: #f4f4f4;
-  border: 1px solid #ddd;
+  background-color: #333;
+  border: 1px solid #404040;
   padding: 5px;
   margin: 5px;
   border-radius: 5px;
@@ -90,14 +110,15 @@ body {
   color: red;
   cursor: pointer;
   margin-left: 5px;
+  padding: 2px 6px;
 }
 
 .filter-tag .edit {
-  color: blue;
+  color: #66b3ff;
 }
 
 .filter-tag .duplicate {
-  color: green;
+  color: #4CAF50;
 }
 
 .filter-input {
@@ -115,8 +136,8 @@ body {
 
 .sort-tag {
   display: inline-block;
-  background-color: #f4f4f4;
-  border: 1px solid #ddd;
+  background-color: #333;
+  border: 1px solid #404040;
   padding: 5px;
   margin: 5px;
   border-radius: 5px;
@@ -129,23 +150,26 @@ body {
   color: red;
   cursor: pointer;
   margin-left: 5px;
+  padding: 2px 6px;
 }
 
 .sort-tag .edit {
-  color: blue;
+  color: #66b3ff;
 }
 
 .sort-tag .remove {
-  color: red;
+  color: #ff6666;
 }
 
 .sort-tag.dragging {
-  opacity: 0.5;
+  background-color: #404040;
+  opacity: 0.7;
   cursor: grabbing;
 }
 
 #activeSorts {
   min-height: 40px;
   padding: 5px;
-  border: 1px dashed #ccc;
+  border: 1px dashed #404040;
+  background-color: #252525;
 }
