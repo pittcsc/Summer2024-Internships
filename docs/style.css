@@ -295,7 +295,13 @@ h2 {
 }
 
 .simplify-logo {
-  height: 16px;
-  width: 16px;
-  margin-left: 4px;
+  height: 24px;
+  width: 24px;
+  vertical-align: middle;
+}
+
+.apply-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

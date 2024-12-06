@@ -97,12 +97,12 @@ Promise.all([
         <td>${item.title}</td>
         <td>${item.locations}</td>
         <td>
-          <a href="${item.url}" class="apply-btn" target="_blank">
-            Apply
+          <div class="apply-links">
+            <a href="${item.url}" class="apply-btn" target="_blank">Apply</a>
             <a href="https://simplify.jobs/p/${item.id}" target="_blank">
               <img src="simplify-logo.png" alt="Simplify" class="simplify-logo">
             </a>
-          </a>
+          </div>
         </td>
         <td>${formattedDate}</td>
         <td>
