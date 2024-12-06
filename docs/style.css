@@ -91,3 +91,7 @@ body {
   cursor: pointer;
   margin-left: 5px;
 }
+
+.filter-tag .edit {
+  color: blue;
+}

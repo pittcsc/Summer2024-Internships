@@ -80,9 +80,11 @@ fetch("../.github/scripts/listings.json")
     const applyGlobalFilterBtn = document.getElementById("applyGlobalFilter");
     const activeFiltersContainer = document.getElementById("activeFilters");
     let activeFilters = [];
+    let editIndex = null;
 
     addFilterBtn.onclick = () => {
       filterModal.style.display = "block";
+      editIndex = null;
     };
 
     closeBtn.onclick = () => {
@@ -140,7 +142,12 @@ fetch("../.github/scripts/listings.json")
         filter.value = document.getElementById("filterValue").value.toLowerCase();
       }
 
-      activeFilters.push(filter);
+      if (editIndex !== null) {
+        activeFilters[editIndex] = filter;
+      } else {
+        activeFilters.push(filter);
+      }
+
       updateActiveFilters();
       applyFilters();
       filterModal.style.display = "none";
@@ -153,17 +160,41 @@ fetch("../.github/scripts/listings.json")
         filterTag.className = "filter-tag";
         filterTag.innerHTML = `
           ${filter.column}: ${filter.type || ""} ${filter.value || filter.fromDate + " to " + filter.toDate || filter.status}
-          <button data-index="${index}">&times;</button>
+          <button class="edit" data-index="${index}">Edit</button>
+          <button class="remove" data-index="${index}">&times;</button>
         `;
         activeFiltersContainer.appendChild(filterTag);
       });
 
-      document.querySelectorAll(".filter-tag button").forEach(button => {
+      document.querySelectorAll(".filter-tag .remove").forEach(button => {
         button.onclick = () => {
           const index = button.dataset.index;
           activeFilters.splice(index, 1);
           updateActiveFilters();
           applyFilters();
+        };
+      });
+
+      document.querySelectorAll(".filter-tag .edit").forEach(button => {
+        button.onclick = () => {
+          const index = button.dataset.index;
+          const filter = activeFilters[index];
+          editIndex = index;
+
+          filterColumn.value = filter.column;
+          filterColumn.onchange();
+
+          if (filter.column === "date") {
+            document.getElementById("fromDate").value = filter.fromDate;
+            document.getElementById("toDate").value = filter.toDate;
+          } else if (filter.column === "status") {
+            document.getElementById("statusFilter").value = filter.status;
+          } else {
+            document.getElementById("filterType").value = filter.type;
+            document.getElementById("filterValue").value = filter.value;
+          }
+
+          filterModal.style.display = "block";
         };
       });
     }
