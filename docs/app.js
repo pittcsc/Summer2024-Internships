@@ -1,3 +1,6 @@
+let activeFilters = []; // Move this to the top
+const activeFiltersContainer = document.getElementById("activeFilters"); // Move this to the top
+
 // Fetch internship data from the README file (or a preprocessed JSON file)
 fetch("../.github/scripts/listings.json")
   .then(response => response.json())
@@ -29,6 +32,12 @@ fetch("../.github/scripts/listings.json")
       `;
       table.appendChild(row);
     });
+
+    // Apply default filters
+    activeFilters.push({ column: "date", fromDate: "2024-01-01", toDate: "" });
+    activeFilters.push({ column: "active", active: true });
+    updateActiveFilters();
+    applyFilters();
 
     // Update row count
     updateRowCount();
@@ -83,8 +92,6 @@ fetch("../.github/scripts/listings.json")
     const filterColumn = document.getElementById("filterColumn");
     const filterOptions = document.getElementById("filterOptions");
     const applyGlobalFilterBtn = document.getElementById("applyGlobalFilter");
-    const activeFiltersContainer = document.getElementById("activeFilters");
-    let activeFilters = [];
     let editIndex = null;
 
     addFilterBtn.onclick = () => {
