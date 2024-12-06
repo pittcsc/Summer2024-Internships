@@ -154,15 +154,6 @@ fetch("../.github/scripts/listings.json")
       });
     });
 
-    // Add event listeners for sort buttons
-    document.querySelectorAll(".sort").forEach(button => {
-      button.addEventListener("click", () => {
-        const column = button.dataset.column;
-        const order = button.dataset.order;
-        sortTable(column, order);
-      });
-    });
-
     // Global filter functionality
     const filterModal = document.getElementById("filterModal");
     const addFilterBtn = document.getElementById("addFilter");
