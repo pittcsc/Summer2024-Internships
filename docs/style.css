@@ -76,13 +76,19 @@ button:hover {
   border: 1px solid #404040;
   width: 80%;
   max-width: 600px;
+  position: relative;
 }
 
 .close {
-  color: #808080;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  color: #ff6666;
+  font-size: 16px;
 }
 
 .close:hover,
