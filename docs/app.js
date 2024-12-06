@@ -147,6 +147,12 @@ fetch("../.github/scripts/listings.json")
       filterInput.querySelector(".remove-input").onclick = () => {
         filterInput.remove();
       };
+
+      filterInput.querySelector(".filterValue").addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+          applyGlobalFilterBtn.click();
+        }
+      });
     }
 
     applyGlobalFilterBtn.onclick = () => {
