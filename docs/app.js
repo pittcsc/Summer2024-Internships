@@ -108,6 +108,11 @@ fetch("../.github/scripts/listings.json")
     updateActiveFilters();
     applyFilters();
 
+    // Add default sort
+    activeSorts.push({ column: "date", order: "desc" });
+    updateActiveSorts();
+    sortTable();
+
     // Update row count
     updateRowCount();
 
