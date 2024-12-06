@@ -256,9 +256,13 @@ button:hover {
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 section {
+  width: 100%;
   margin-bottom: 15px;
   background: #252525;
   padding: 12px;
@@ -272,10 +276,12 @@ h2 {
   padding-bottom: 6px;
   border-bottom: 1px solid #404040;
   color: #66b3ff;
+  text-align: center;
 }
 
 .search-section {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 12px;
 }
@@ -319,9 +325,15 @@ h2 {
   padding: 4px 8px;
 }
 
-/* Remove any margin-top from the table */
+.table-section {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .table-section table {
+  width: 100%;
   margin-top: 0;
+  border-collapse: collapse;
 }
 
 .apply-btn {
