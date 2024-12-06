@@ -186,8 +186,9 @@ fetch("../.github/scripts/listings.json")
     };
 
     window.onclick = (event) => {
-      if (event.target == filterModal) {
+      if (event.target === filterModal || event.target === sortModal) {
         filterModal.style.display = "none";
+        sortModal.style.display = "none";
       }
     };
 
@@ -368,12 +369,6 @@ fetch("../.github/scripts/listings.json")
 
     closeSortBtn.onclick = () => {
       sortModal.style.display = "none";
-    };
-
-    window.onclick = (event) => {
-      if (event.target == sortModal) {
-        sortModal.style.display = "none";
-      }
     };
 
     applySortBtn.onclick = () => {
