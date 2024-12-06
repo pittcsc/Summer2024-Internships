@@ -27,15 +27,15 @@ function applyFilters() {
         case "date":
           const fromDate = filter.fromDate ? new Date(filter.fromDate) : new Date(-8640000000000000);
           const toDate = filter.toDate ? new Date(filter.toDate) : new Date(8640000000000000);
-          const dateText = new Date(row.cells[5].textContent);
+          const dateText = new Date(row.cells[4].textContent); // Updated index
           shouldDisplay = shouldDisplay && dateText >= fromDate && dateText <= toDate;
           break;
         case "status":
-          const isChecked = row.cells[6].querySelector("input").checked;
+          const isChecked = row.cells[5].querySelector("input").checked; // Updated index
           shouldDisplay = shouldDisplay && ((filter.status && isChecked) || (!filter.status && !isChecked));
           break;
         case "active":
-          const isActive = row.cells[7].textContent.toLowerCase() === "active";
+          const isActive = row.cells[6].textContent.toLowerCase() === "active"; // Updated index
           shouldDisplay = shouldDisplay && ((filter.active && isActive) || (!filter.active && !isActive));
           break;
       }
