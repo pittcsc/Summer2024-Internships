@@ -96,8 +96,14 @@ Promise.all([
         <td>${item.company_name}</td>
         <td>${item.title}</td>
         <td>${item.locations}</td>
-        <td><a href="${item.url}" target="_blank">Link</a></td>
-        <td><a href="https://simplify.jobs/p/${item.id}" target="_blank">Link</a></td>
+        <td>
+          <a href="${item.url}" class="apply-btn" target="_blank">
+            Apply
+            <a href="https://simplify.jobs/p/${item.id}" target="_blank">
+              <img src="simplify-logo.png" alt="Simplify" class="simplify-logo">
+            </a>
+          </a>
+        </td>
         <td>${formattedDate}</td>
         <td>
           <input type="checkbox" data-id="${index}" ${isApplied ? "checked" : ""}>
@@ -476,9 +482,9 @@ Promise.all([
             company: 0,
             role: 1,
             location: 2,
-            date: 5,
-            status: 6,
-            active: 7
+            date: 4,        // Updated indices
+            status: 5,      // Updated indices
+            active: 6       // Updated indices
           }[sort.column];
 
           let aText = a.cells[columnIndex].textContent.toLowerCase();

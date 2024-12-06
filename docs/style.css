@@ -277,3 +277,25 @@ h2 {
 .table-section table {
   margin-top: 0;
 }
+
+.apply-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #333;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #e0e0e0;
+}
+
+.apply-btn:hover {
+  background-color: #404040;
+  text-decoration: none;
+}
+
+.simplify-logo {
+  height: 16px;
+  width: 16px;
+  margin-left: 4px;
+}
