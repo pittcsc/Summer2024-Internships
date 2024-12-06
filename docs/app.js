@@ -67,15 +67,21 @@ function applyFilters() {
   updateRowCount();
 }
 
-// Fetch internship data from the README file (or a preprocessed JSON file)
-fetch("https://raw.githubusercontent.com/abhira0/Summer2025-Internships/dev/.github/scripts/listings.json")
-  .then(response => response.json())
-  .then(data => {
+// Fetch both files and combine the data
+Promise.all([
+  fetch("https://raw.githubusercontent.com/abhira0/Summer2025-Internships/dev/.github/scripts/listings.json"),
+  fetch("simplify_tracker.json")
+])
+  .then(responses => Promise.all(responses.map(r => r.json())))
+  .then(([listings, tracker]) => {
     const table = document.querySelector("#internshipTable tbody");
     const rowCount = document.getElementById("rowCount");
 
-    // Populate the table with the first 100 rows
-    data.forEach((item, index) => {
+    // Create a Set of applied job IDs
+    const appliedJobIds = new Set(tracker.map(item => item.job_posting_id));
+
+    // Populate the table
+    listings.forEach((item, index) => {
       const row = document.createElement("tr");
       const date = new Date(item.date_updated * 1000);
       const formattedDate = date.toLocaleDateString("en-US", {
@@ -84,6 +90,8 @@ fetch("https://raw.githubusercontent.com/abhira0/Summer2025-Internships/dev/.git
         day: "2-digit"
       });
 
+      const isApplied = appliedJobIds.has(item.id);
+      
       row.innerHTML = `
         <td>${item.company_name}</td>
         <td>${item.title}</td>
@@ -92,7 +100,7 @@ fetch("https://raw.githubusercontent.com/abhira0/Summer2025-Internships/dev/.git
         <td><a href="https://simplify.jobs/p/${item.id}" target="_blank">Link</a></td>
         <td>${formattedDate}</td>
         <td>
-          <input type="checkbox" data-id="${index}" ${item.applied ? "checked" : ""}>
+          <input type="checkbox" data-id="${index}" ${isApplied ? "checked" : ""}>
         </td>
         <td>${item.active ? "Active" : "Inactive"}</td>
       `;
