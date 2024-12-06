@@ -7,10 +7,20 @@ fetch("../.github/scripts/listings.json")
     // Populate the table
     data.forEach((item, index) => {
       const row = document.createElement("tr");
+      const date = new Date(item.date_updated * 1000);
+      const formattedDate = date.toLocaleDateString("en-US", {
+        year: "2-digit",
+        month: "short",
+        day: "2-digit"
+      });
+
       row.innerHTML = `
-        <td>${item.company}</td>
-        <td>${item.role}</td>
-        <td>${item.location}</td>
+        <td>${item.company_name}</td>
+        <td>${item.title}</td>
+        <td>${item.locations}</td>
+        <td><a href="${item.url}" target="_blank">Link</a></td>
+        <td><a href="https://simplify.jobs/p/${item.id}" target="_blank">Link</a></td>
+        <td>${formattedDate}</td>
         <td>
           <input type="checkbox" data-id="${index}" ${item.applied ? "checked" : ""}>
         </td>
