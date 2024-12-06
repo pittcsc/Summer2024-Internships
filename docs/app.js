@@ -36,6 +36,9 @@ fetch("../.github/scripts/listings.json")
     // Apply default filters
     activeFilters.push({ column: "date", fromDate: "2024-01-01", toDate: "" });
     activeFilters.push({ column: "active", active: true });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "toronto, on, canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-contains", value: "vancouver, canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-contains", value: "ottawa, canada" }] });
     updateActiveFilters();
     applyFilters();
 
