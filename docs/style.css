@@ -113,16 +113,6 @@ button:hover {
   font-size: 14px;
 }
 
-.filter-column {
-  background-color: #2c5282;
-  color: #ebf8ff;
-  padding: 2px 6px;
-  border-radius: 3px;
-  margin-right: 6px;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
 .filter-condition {
   color: #90cdf4;
   margin: 0 4px;
@@ -201,8 +191,8 @@ button:hover {
   cursor: grab;
 }
 
-.sort-column {
-  background-color: #553C9A;  /* Purple shade for sort */
+.sort-column,  .filter-column {
+  background-color: #553C9A;  /* Deeper purple for header */
   color: #E9D8FD;
   padding: 2px 6px;
   border-radius: 3px;
@@ -222,6 +212,12 @@ button:hover {
 
 .sort-direction i {
   margin-left: 2px;
+  font-size: 1.2em;
+  color: #90cdf4;  /* Lighter blue for better visibility */
+}
+
+.sort-direction i:hover {
+  color: #63b3ed;  /* Darker blue on hover */
 }
 
 .sort-value {
