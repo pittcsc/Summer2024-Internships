@@ -13,7 +13,7 @@ function applyFilters() {
     let shouldDisplay = true;
 
     activeFilters.forEach(filter => {
-      let cellText;
+      let cellText = "";
       switch (filter.column) {
         case "company":
           cellText = row.cells[0].textContent.toLowerCase();
@@ -42,22 +42,23 @@ function applyFilters() {
 
       if (filter.column !== "date" && filter.column !== "applied" && filter.column !== "active") {
         let conditionMet = false;
-        filter.conditions.forEach(condition => {
-          switch (condition.type) {
-            case "contains":
-              conditionMet = conditionMet || cellText.includes(condition.value);
-              break;
-            case "equals":
-              conditionMet = conditionMet || cellText === condition.value;
-              break;
-            case "not-equals":
-              conditionMet = conditionMet || cellText !== condition.value;
-              break;
-            case "not-contains":
-              conditionMet = conditionMet || !cellText.includes(condition.value);
-              break;
-          }
-        });
+        if (filter.conditions) {
+          // Use some() to implement OR logic between conditions
+          conditionMet = filter.conditions.some(condition => {
+            switch (condition.type) {
+              case "contains":
+                return cellText.includes(condition.value);
+              case "equals":
+                return cellText === condition.value;
+              case "not-equals":
+                return cellText !== condition.value;
+              case "not-contains":
+                return !cellText.includes(condition.value);
+              default:
+                return false;
+            }
+          });
+        }
         shouldDisplay = shouldDisplay && conditionMet;
       }
     });
@@ -117,8 +118,17 @@ Promise.all([
     activeFilters.push({ column: "date", fromDate: "2024-01-01", toDate: "" });
     activeFilters.push({ column: "active", active: true });
     activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "toronto, on, canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "toronto, canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "remote in canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "mississauga, on, canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "montreal, qc, canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "vancouver, bc, canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-equals", value: "canada" }] });
     activeFilters.push({ column: "location", conditions: [{ type: "not-contains", value: "vancouver, canada" }] });
     activeFilters.push({ column: "location", conditions: [{ type: "not-contains", value: "ottawa, canada" }] });
+    activeFilters.push({ column: "location", conditions: [{ type: "not-contains", value: "london, uk" }] });
     updateActiveFilters();
     applyFilters();
 
@@ -129,18 +139,6 @@ Promise.all([
 
     // Update row count
     updateRowCount();
-
-    // Save changes when a checkbox is clicked
-    table.addEventListener("change", (event) => {
-      const checkbox = event.target;
-      if (checkbox.type === "checkbox") {
-        const id = checkbox.dataset.id;
-        data[id].applied = checkbox.checked;
-
-        // Save to localStorage
-        localStorage.setItem("internshipData", JSON.stringify(data));
-      }
-    });
 
     // Add event listeners for filter buttons
     document.querySelectorAll(".apply-filter").forEach((button, index) => {
