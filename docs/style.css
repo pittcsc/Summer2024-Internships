@@ -190,13 +190,47 @@ button:hover {
 }
 
 .sort-tag {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   background-color: #333;
   border: 1px solid #404040;
-  padding: 5px;
+  padding: 5px 8px;
   margin: 5px;
   border-radius: 5px;
+  font-size: 14px;
   cursor: grab;
+}
+
+.sort-column {
+  background-color: #553C9A;  /* Purple shade for sort */
+  color: #E9D8FD;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-right: 6px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.sort-direction {
+  color: #B794F4;
+  margin: 0 4px;
+  font-size: 1.1em;
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.9;
+}
+
+.sort-direction i {
+  margin-left: 2px;
+}
+
+.sort-value {
+  background-color: #44337A;
+  color: #D6BCFA;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Consolas', monospace;
+  border: 1px solid #553C9A;
 }
 
 .sort-tag button {

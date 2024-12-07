@@ -426,6 +426,12 @@ Promise.all([
       sortModal.style.display = "none";
     };
 
+    function getSortSymbol(order) {
+      return order === 'asc' 
+        ? '<i class="fas fa-sort-amount-up-alt" data-tooltip="Ascending"></i>' 
+        : '<i class="fas fa-sort-amount-down-alt" data-tooltip="Descending"></i>';
+    }
+
     function updateActiveSorts() {
       activeSortsContainer.innerHTML = "";
       activeSorts.forEach((sort, index) => {
@@ -433,8 +439,10 @@ Promise.all([
         sortTag.className = "sort-tag";
         sortTag.draggable = true;
         sortTag.dataset.index = index;
+        
         sortTag.innerHTML = `
-          ${sort.column}: ${sort.order}
+          <span class="sort-column">${sort.column}</span>
+          <span class="sort-direction">${getSortSymbol(sort.order)}</span>
           <button class="edit" data-index="${index}" data-tooltip="Edit"><i class="fas fa-edit"></i></button>
           <button class="remove" data-index="${index}" data-tooltip="Delete"><i class="fas fa-times"></i></button>
         `;
