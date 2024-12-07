@@ -287,30 +287,57 @@ Promise.all([
       filterModal.style.display = "none";
     };
 
+    function getConditionSymbol(type) {
+      switch (type) {
+        case "contains":
+          return "∈";  // Element of (more intuitive than superset)
+        case "equals":
+          return "=";  // Simple equals
+        case "not-equals":
+          return "≠";  // Standard not equals
+        case "not-contains":
+          return "∉";  // Not element of (more intuitive than not superset)
+        default:
+          return type;
+      }
+    }
+
     function updateActiveFilters() {
       activeFiltersContainer.innerHTML = "";
       activeFilters.forEach((filter, index) => {
         const filterTag = document.createElement("div");
         filterTag.className = "filter-tag";
-        let filterDescription = `${filter.column}: `;
+        
+        let filterContent = `<span class="filter-column">${filter.column}</span>`;
+        
         if (filter.column === "date") {
-          filterDescription += `${filter.fromDate || "Any"} to ${filter.toDate || "Any"}`;
+          filterContent += `
+            <span class="filter-condition">:</span>
+            <span class="filter-value">${filter.fromDate || "Any"}</span>
+            <span class="filter-condition">→</span>
+            <span class="filter-value">${filter.toDate || "Any"}</span>`;
         } else if (filter.column === "applied" || filter.column === "active") {
-          filterDescription += filter[filter.column] ? (filter.column === "applied" ? "Applied" : "Active") : (filter.column === "applied" ? "Not Applied" : "Inactive");
+          filterContent += `
+            <span class="filter-condition">is</span>
+            <span class="filter-value">${filter[filter.column] ? 
+            (filter.column === "applied" ? "Applied" : "Active") : 
+            (filter.column === "applied" ? "Not Applied" : "Inactive")}</span>`;
         } else {
           filter.conditions.forEach((condition, i) => {
-            filterDescription += `${condition.type} ${condition.value}`;
-            if (i < filter.conditions.length - 1) {
-              filterDescription += " OR ";
-            }
+            if (i > 0) filterContent += `<span class="filter-condition">∨</span>`; // OR symbol
+            filterContent += `
+              <span class="filter-condition">${getConditionSymbol(condition.type)}</span>
+              <span class="filter-value">${condition.value}</span>`;
           });
         }
-        filterTag.innerHTML = `
-          ${filterDescription}
+        
+        filterContent += `
           <button class="edit" data-index="${index}" data-tooltip="Edit"><i class="fas fa-edit"></i></button>
           <button class="duplicate" data-index="${index}" data-tooltip="Duplicate"><i class="fas fa-copy"></i></button>
           <button class="remove" data-index="${index}" data-tooltip="Delete"><i class="fas fa-times"></i></button>
         `;
+        
+        filterTag.innerHTML = filterContent;
         activeFiltersContainer.appendChild(filterTag);
       });
 

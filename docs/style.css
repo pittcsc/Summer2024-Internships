@@ -103,12 +103,59 @@ button:hover {
 }
 
 .filter-tag {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   background-color: #333;
   border: 1px solid #404040;
-  padding: 5px;
+  padding: 5px 8px;
   margin: 5px;
   border-radius: 5px;
+  font-size: 14px;
+}
+
+.filter-column {
+  background-color: #2c5282;
+  color: #ebf8ff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-right: 6px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.filter-condition {
+  color: #90cdf4;
+  margin: 0 4px;
+  font-family: 'Arial', sans-serif;  /* Changed from Consolas for better symbol rendering */
+  font-size: 1.3em;  /* Slightly larger */
+  font-weight: normal;  /* Changed from bold for better clarity */
+  line-height: 1;  /* Ensure vertical alignment */
+  display: inline-flex;
+  align-items: center;
+}
+
+.filter-value {
+  background-color: #1a365d;
+  color: #63b3ed;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Consolas', monospace;
+  border: 1px solid #2c5282;
+}
+
+.filter-tag button {
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  padding: 2px;
+  width: 24px;
+  height: 24px;
+  margin-left: 4px;
+  border-radius: 3px;
+}
+
+.filter-tag button:hover {
+  opacity: 1;
+  background-color: #404040;
 }
 
 .filter-tag button {
